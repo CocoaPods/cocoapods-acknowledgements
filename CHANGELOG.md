@@ -1,0 +1,3 @@
+# Cocoapods::Metadata Changelog
+
+## Master
