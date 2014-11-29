@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cocoapods_install_metadata/version.rb'
+require 'cocoapods_acknowledgements/version.rb'
 
 Gem::Specification.new do |spec|
-  spec.name          = "cocoapods-install-metadata"
-  spec.version       = CocoapodsInstallMetadata::VERSION
+  spec.name          = "cocoapods-acknowledgements"
+  spec.version       = CocoaPodsAcknowledgements::VERSION
   spec.authors       = ["Fabio Pelosin", "Orta Therox"]
-  spec.summary       = %q{CocoaPods plugin that generates a plist which includes the installation metadata.}
+  spec.summary       = %q{CocoaPods plugin that generates a plist which includes the everything necessary to give acknowledgements.}
   spec.homepage      = "https://github.com/CocoaPods/cocoapods-installation-metadata"
   spec.license       = "MIT"
 

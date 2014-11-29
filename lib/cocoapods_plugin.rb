@@ -1,2 +1,2 @@
-require 'cocoapods_install_metadata'
+require 'cocoapods_acknowledgements'
 

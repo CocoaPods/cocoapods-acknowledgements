@@ -1,6 +1,5 @@
-
-module CocoapodsInstallMetadata
-  require 'cocoapods_install_metadata/plist_generator'
+module CocoaPodsAcknowledgements
+  require 'cocoapods_acknowledgements/plist_generator'
 
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |options|
     require 'xcodeproj/ext'

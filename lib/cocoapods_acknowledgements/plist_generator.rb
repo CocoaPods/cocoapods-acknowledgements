@@ -1,4 +1,4 @@
-module CocoapodsInstallMetadata
+module CocoaPodsAcknowledgements
   class PlistGenerator
     class << self
 
