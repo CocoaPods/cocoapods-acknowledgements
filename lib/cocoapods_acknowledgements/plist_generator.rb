@@ -2,24 +2,24 @@ module CocoaPodsAcknowledgements
   class PlistGenerator
     class << self
 
-      def generate(user_target, sandbox)
+      def generate(target_description, sandbox)
         specs_metadata = []
-        root_specs = user_target[:specs].map(&:root).uniq
+        root_specs = target_description.specs.map(&:root).uniq
         root_specs.each do |spec|
           pod_root = sandbox.pod_dir(spec.name)
-          platform = Pod::Platform.new(user_target[:platform_name])
+          platform = Pod::Platform.new(target_description.platform_name)
           file_accessor = file_accessor(spec, platform, sandbox)
           license_text = license_text(spec, file_accessor)
 
           spec_metadata = {
-            "CPDName" => spec.name,
-            "CPDVersion" => spec.version,
-            "CPDAuthors" => spec.authors,
-            "CPDSocialMediaURL" => spec.social_media_url,
-            "CPDSummary" => spec.summary,
-            "CPDDescription" => spec.description,
-            "CPDLicenseType" => spec.license[:type],
-            "CPDLicenseText" => license_text,
+            "name" => spec.name,
+            "version" => spec.version,
+            "authors" => spec.authors,
+            "socialMediaURL" => spec.social_media_url,
+            "summary" => spec.summary,
+            "description" => spec.description,
+            "licenseType" => spec.license[:type],
+            "licenseText" => license_text,
           }
           specs_metadata << spec_metadata
         end
