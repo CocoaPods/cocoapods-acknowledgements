@@ -6,7 +6,7 @@ require 'cocoapods_install_metadata/version.rb'
 Gem::Specification.new do |spec|
   spec.name          = "cocoapods-install-metadata"
   spec.version       = CocoapodsInstallMetadata::VERSION
-  spec.authors       = ["Fabio Pelosin"]
+  spec.authors       = ["Fabio Pelosin", "Orta Therox"]
   spec.summary       = %q{CocoaPods plugin that generates a plist which includes the installation metadata.}
   spec.homepage      = "https://github.com/CocoaPods/cocoapods-installation-metadata"
   spec.license       = "MIT"
