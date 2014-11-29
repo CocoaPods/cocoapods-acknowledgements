@@ -1,10 +1,9 @@
 module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/plist_generator'
 
-  Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context|
+  Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
     require 'cocoapods'
     
-    p context
     Pod::UI.section 'Adding Acknowledgements' do
     
       sandbox = Pod::Sandbox.new(context.sandbox_root)
