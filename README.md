@@ -21,13 +21,13 @@ plugin 'cocoapods-acknowledgements'
 For embedding a `Settings.bundle` compatible plist
 
 ``` ruby
-plugin 'cocoapods-acknowledgements', settings_bundle: true
+plugin 'cocoapods-acknowledgements', :settings_bundle => true
 ```
 
 With a Settings.bundle compatible plist, offering the chance to run post-processing on the plist ( to add non-CocoaPods dependencies for example )
 
 ``` ruby
-plugin 'cocoapods-acknowledgements', settings_bundle: true , settings_post_process: Proc.new { |settings_plist_path| 
+plugin 'cocoapods-acknowledgements', :settings_bundle => true , :settings_post_process => Proc.new { |settings_plist_path| 
   puts settings_plist_path 
 }
 ```
