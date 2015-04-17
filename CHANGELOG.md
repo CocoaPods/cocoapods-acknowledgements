@@ -5,7 +5,7 @@
 ##### Enhancements
 
 * Support Settings bundle style plists.  
-  [Marcelo Fabri](marcelofabri)
+  [Marcelo Fabri](https://github.com/marcelofabri)
 
 * Support full Podspec metadata style.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
