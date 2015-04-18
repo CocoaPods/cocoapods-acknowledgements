@@ -29,7 +29,7 @@ module CocoaPodsAcknowledgements
   
   # TODO: Code golf this
   def self.settings_bundle_in_project
-    Dir.glob("**/*Settings.bundle*").first
+    Dir.glob("**/*Settings.bundle").first
   end
   
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
