@@ -28,14 +28,8 @@ module CocoaPodsAcknowledgements
   end
   
   # TODO: Code golf this
-  def self.settings_bundle_in_project project
-    settings = nil
-    project.main_group.children.each do |group|
-      group.children.each do |item|
-        settings = item if item.path == "Settings.bundle"
-      end
-    end
-    settings
+  def self.settings_bundle_in_project
+    Dir.glob("**/*Settings.bundle").first
   end
   
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
@@ -71,12 +65,13 @@ module CocoaPodsAcknowledgements
             # We need to look for a Settings.bundle
             # and add this to the root of the bundle
             
-            settings_bundle = settings_bundle_in_project project
+            settings_bundle = settings_bundle_in_project
             if settings_bundle == nil
               Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
             else
-              settings_plist_path = settings_bundle.real_path.to_s + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
-              Pod::UI.info 'Added Pod info to Settings.bundle'
+              settings_plist_path = settings_bundle + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
+              FileUtils.cp(plist_path, settings_plist_path)
+              Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
               
               # Support a callback for the key :settings_post_process
               if user_options["settings_post_process"]
