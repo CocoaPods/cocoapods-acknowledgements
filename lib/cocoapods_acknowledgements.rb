@@ -55,6 +55,9 @@ module CocoaPodsAcknowledgements
           
           # Generate a plist representing all of the podspecs
           metadata = PlistGenerator.generate(umbrella_target, sandbox)
+          
+          next unless metadata
+          
           plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
           save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
           
