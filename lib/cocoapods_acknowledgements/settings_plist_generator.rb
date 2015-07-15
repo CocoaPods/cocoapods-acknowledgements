@@ -5,8 +5,12 @@ module CocoaPodsAcknowledgements
     class << self
 
       def generate(target_description, sandbox)
-        specs_metadata = [header]
         root_specs = target_description.specs.map(&:root).uniq
+
+        return nil if root_specs.empty?
+
+        specs_metadata = [header]
+
         root_specs.each do |spec|
           pod_root = sandbox.pod_dir(spec.name)
           platform = Pod::Platform.new(target_description.platform_name)
