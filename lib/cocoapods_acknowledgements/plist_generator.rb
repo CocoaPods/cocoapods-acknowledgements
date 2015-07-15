@@ -4,9 +4,9 @@ module CocoaPodsAcknowledgements
 
       def generate(target_description, sandbox)
         root_specs = target_description.specs.map(&:root).uniq
-        
+
         return nil if root_specs.empty?
-        
+
         specs_metadata = []
         root_specs.each do |spec|
           pod_root = sandbox.pod_dir(spec.name)
