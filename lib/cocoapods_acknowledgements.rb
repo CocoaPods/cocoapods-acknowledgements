@@ -78,7 +78,7 @@ module CocoaPodsAcknowledgements
               
               # Support a callback for the key :settings_post_process
               if user_options["settings_post_process"]
-                user_options["settings_post_process"].call(settings_plist_path)
+                user_options["settings_post_process"].call(settings_plist_path, umbrella_target)
               end
               
             end
