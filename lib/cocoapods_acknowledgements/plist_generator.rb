@@ -1,6 +1,12 @@
+require 'redcarpet'
+
 module CocoaPodsAcknowledgements
   class PlistGenerator
     class << self
+
+      def markdown_parser
+        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+      end
 
       def generate(target_description, sandbox)
         root_specs = target_description.specs.map(&:root).uniq
@@ -20,7 +26,7 @@ module CocoaPodsAcknowledgements
             "authors" => spec.authors,
             "socialMediaURL" => spec.social_media_url,
             "summary" => spec.summary,
-            "description" => spec.description,
+            "description" => parse_markdown(spec.description),
             "licenseType" => spec.license[:type],
             "licenseText" => license_text,
           }
@@ -66,6 +72,11 @@ module CocoaPodsAcknowledgements
           end
         end
         text
+      end
+
+      def parse_markdown(text)
+        return nil unless text
+        markdown_parser.render(text)
       end
 
       #-----------------------------------------------------------------------#
