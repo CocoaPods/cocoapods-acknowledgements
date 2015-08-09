@@ -4,10 +4,8 @@ module CocoaPodsAcknowledgements
   class PlistGenerator
     class << self
 
-      @@markdown_parser = Redcarpet::Markdown.new(Redcarpet::Render::HTML, extensions = {})
-
       def markdown_parser
-        @@markdown_parser
+        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
       end
 
       def generate(target_description, sandbox)
