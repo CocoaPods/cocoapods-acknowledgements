@@ -46,8 +46,10 @@ module CocoaPodsAcknowledgements
     Pod::UI.section 'Adding Acknowledgements' do
 
       should_include_settings = user_options["settings_bundle"] != nil
-      
-      sandbox = Pod::Sandbox.new(context.sandbox_root)
+
+      sandbox = context.sandbox if defined? context.sandbox
+      sandbox ||= Pod::Sandbox.new(context.sandbox_root)
+
       context.umbrella_targets.each do |umbrella_target|
         project = Xcodeproj::Project.open(umbrella_target.user_project_path)
         
