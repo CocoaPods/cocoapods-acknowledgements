@@ -6,9 +6,9 @@ require 'cocoapods_acknowledgements/version.rb'
 Gem::Specification.new do |spec|
   spec.name          = "cocoapods-acknowledgements"
   spec.version       = CocoaPodsAcknowledgements::VERSION
-  spec.authors       = ["Fabio Pelosin", "Orta Therox"]
-  spec.summary       = %q{CocoaPods plugin that generates a plist which includes the everything necessary to give acknowledgements.}
-  spec.homepage      = "https://github.com/CocoaPods/cocoapods-installation-metadata"
+  spec.authors       = ["Fabio Pelosin", "Orta Therox", "Marcelo Fabri"]
+  spec.summary       = %q{CocoaPods plugin that generates an acknowledgements plist to make it easy to create tools to use in apps.}
+  spec.homepage      = "https://github.com/CocoaPods/cocoapods-acknowledgements"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

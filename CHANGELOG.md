@@ -1,4 +1,4 @@
-# Cocoapods::Metadata Changelog
+# CocoaPods::Metadata Changelog
 
 ## Master
 
