@@ -46,6 +46,7 @@ module CocoaPodsAcknowledgements
     Pod::UI.section 'Adding Acknowledgements' do
 
       should_include_settings = user_options["settings_bundle"] != nil
+      excluded_pods = Array(user_options["excluded"])
       
       sandbox = Pod::Sandbox.new(context.sandbox_root)
       context.umbrella_targets.each do |umbrella_target|
@@ -54,7 +55,7 @@ module CocoaPodsAcknowledgements
         umbrella_target.user_target_uuids.each do |user_target_uuid|
           
           # Generate a plist representing all of the podspecs
-          metadata = PlistGenerator.generate(umbrella_target, sandbox)
+          metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
           
           next unless metadata
           
@@ -63,7 +64,7 @@ module CocoaPodsAcknowledgements
           
           if should_include_settings
             # Generate a plist in Settings format
-            settings_metadata = SettingsPlistGenerator.generate(umbrella_target, sandbox)
+            settings_metadata = SettingsPlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
 
             # We need to look for a Settings.bundle
             # and add this to the root of the bundle
@@ -78,7 +79,7 @@ module CocoaPodsAcknowledgements
               
               # Support a callback for the key :settings_post_process
               if user_options["settings_post_process"]
-                user_options["settings_post_process"].call(settings_plist_path, umbrella_target)
+                user_options["settings_post_process"].call(settings_plist_path, umbrella_target, excluded_pods)
               end
               
             end
