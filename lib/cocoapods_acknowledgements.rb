@@ -75,7 +75,7 @@ module CocoaPodsAcknowledgements
               Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
             else
               settings_plist_path = settings_bundle + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
-              FileUtils.cp(plist_path, settings_plist_path)
+              save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid)
               Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
               
               # Support a callback for the key :settings_post_process
