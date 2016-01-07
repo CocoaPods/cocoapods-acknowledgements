@@ -9,7 +9,7 @@ module CocoaPodsAcknowledgements
       end
 
       def generate(target_description, sandbox, excluded)
-        root_specs = target_description.specs.map(&:root).uniq.select { |spec| !excluded.include? spec.name }
+        root_specs = target_description.specs.map(&:root).uniq.reject { |spec| excluded.include?(spec.name) }
 
         return nil if root_specs.empty?
 

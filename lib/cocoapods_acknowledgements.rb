@@ -34,6 +34,7 @@ module CocoaPodsAcknowledgements
   
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
     require 'cocoapods'
+    require 'set'
     
     # Until CocoaPods provides a HashWithIndifferentAccess, normalize the hash keys here.
     # See https://github.com/CocoaPods/CocoaPods/issues/3354
@@ -46,7 +47,7 @@ module CocoaPodsAcknowledgements
     Pod::UI.section 'Adding Acknowledgements' do
 
       should_include_settings = user_options["settings_bundle"] != nil
-      excluded_pods = Array(user_options["excluded"])
+      excluded_pods = Set.new(user_options["excluded"])
 
       sandbox = context.sandbox if defined? context.sandbox
       sandbox ||= Pod::Sandbox.new(context.sandbox_root)
