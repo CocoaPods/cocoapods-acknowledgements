@@ -4,8 +4,8 @@ module CocoaPodsAcknowledgements
   class SettingsPlistGenerator < PlistGenerator
     class << self
 
-      def generate(target_description, sandbox)
-        root_specs = target_description.specs.map(&:root).uniq
+      def generate(target_description, sandbox, excluded)
+        root_specs = target_description.specs.map(&:root).uniq.reject { |spec| excluded.include?(spec.name) }
 
         return nil if root_specs.empty?
 
