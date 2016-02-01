@@ -47,7 +47,7 @@ module CocoaPodsAcknowledgements
     Pod::UI.section 'Adding Acknowledgements' do
 
       should_include_settings = user_options["settings_bundle"] != nil
-      excluded_pods = Set.new(user_options["excluded"])
+      excluded_pods = Set.new(user_options["exclude"])
 
       sandbox = context.sandbox if defined? context.sandbox
       sandbox ||= Pod::Sandbox.new(context.sandbox_root)
