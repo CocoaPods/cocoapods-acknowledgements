@@ -12,7 +12,8 @@ module CocoaPodsAcknowledgements
     end
 
     # Add the example plist to the found CocoaPods group
-    file_ref = cocoapods_group.files.find { |file| file.real_path == plist_path }
+    plist_pathname = Pathname.new(File.expand_path(plist_path))
+    file_ref = cocoapods_group.files.find { |file| file.real_path == plist_pathname }
     unless file_ref
       file_ref = cocoapods_group.new_file(plist_path)
     end
