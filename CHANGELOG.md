@@ -10,6 +10,9 @@
 
 ##### Bug Fixes
 
+* Supporting CocoaPods 1.0.  
+  [Marcelo Fabri](https://github.com/marcelofabri)
+
 * Fix adding same file multiple times to group.   
   [Marcelo Fabri](https://github.com/marcelofabri)
 

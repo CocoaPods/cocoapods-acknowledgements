@@ -3,7 +3,11 @@ module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/settings_plist_generator'
 
   def self.save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
-    Xcodeproj.write_plist(metadata, plist_path)
+    if defined? Xcodeproj::Plist.write_to_path
+      Xcodeproj::Plist.write_to_path(metadata, plist_path)
+    else
+      Xcodeproj.write_plist(metadata, plist_path)
+    end
 
     # Find a root folder in the users Xcode Project called Pods, or make one
     cocoapods_group = project.main_group["Pods"]
