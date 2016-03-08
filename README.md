@@ -1,6 +1,6 @@
 # CocoaPods Acknowledgements
 
-A CocoaPods plugin that generates a plist which includes the installation metadata. It supports generating two styles of dependency information. 
+A CocoaPods plugin that generates a plist which includes the installation metadata. It supports generating two styles of dependency information.
 
 * **Settings.bundle compatible plist** - This format is supported by a [large amount of pods](https://cocoapods.org/?q=acknow) and works with Apple's Settings.app.
 
@@ -27,13 +27,13 @@ plugin 'cocoapods-acknowledgements', :settings_bundle => true
 With a Settings.bundle compatible plist, offering the chance to run post-processing on the plist ( to add non-CocoaPods dependencies for example )
 
 ``` ruby
-plugin 'cocoapods-acknowledgements', :settings_bundle => true , :settings_post_process => Proc.new { |settings_plist_path, umbrella_target| 
-  puts settings_plist_path 
+plugin 'cocoapods-acknowledgements', :settings_bundle => true , :settings_post_process => Proc.new { |settings_plist_path, umbrella_target|
+  puts settings_plist_path
   puts umbrella_target.cocoapods_target_label
 }
 ```
 
-The plugin will search through the first two levels of your project to find a `Settings.bundle` file, and add the file to the bundle. If this is not enough for you, we'd love a PR. 
+The plugin will search through the first two levels of your project to find a `Settings.bundle` file, and add the file to the bundle. If this is not enough for you, we'd love a PR.
 
 You can also exclude some dependencies so they won't be added to the generated plists. This is useful when you don't want to add private dependencies.
 

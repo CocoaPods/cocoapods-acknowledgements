@@ -84,4 +84,3 @@ module CocoaPodsAcknowledgements
     end
   end
 end
-

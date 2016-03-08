@@ -1,2 +1,1 @@
 require 'cocoapods_acknowledgements'
-
