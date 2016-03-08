@@ -1,5 +1,16 @@
 # CocoaPods Acknowledgements Changelog
 
+## Master
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.1.0 (2016-03-08)
 
 ##### Enhancements
