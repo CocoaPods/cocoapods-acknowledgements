@@ -4,7 +4,8 @@
 
 ##### Enhancements
 
-* None.  
+* Add `homepage` to the spec's metadata.  
+  [Orta Therox](https://github.com/orta)
 
 ##### Bug Fixes
 

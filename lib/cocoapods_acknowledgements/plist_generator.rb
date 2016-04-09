@@ -29,6 +29,7 @@ module CocoaPodsAcknowledgements
             "description" => parse_markdown(spec.description),
             "licenseType" => spec.license[:type],
             "licenseText" => license_text,
+            "homepage" => spec.homepage,
           }
           specs_metadata << spec_metadata
         end
