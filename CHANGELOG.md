@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix NameError when a license is not found.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#31](https://github.com/CocoaPods/cocoapods-acknowledgements/issues/31)
 
 
 ## 1.1.1 (2016-04-15)
