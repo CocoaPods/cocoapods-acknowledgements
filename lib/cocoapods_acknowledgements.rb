@@ -32,9 +32,9 @@ module CocoaPodsAcknowledgements
 
   end
 
-  # TODO: Code golf this
-  def self.settings_bundle_in_project
-    Dir.glob("**/*Settings.bundle").first
+  def self.settings_bundle_in_project(project)
+    file = project.files.find { |f| f.path =~ /Settings\.bundle$/ }
+    file.hierarchy_path.sub('/', '') unless file.nil?
   end
 
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
@@ -77,7 +77,7 @@ module CocoaPodsAcknowledgements
             # We need to look for a Settings.bundle
             # and add this to the root of the bundle
 
-            settings_bundle = settings_bundle_in_project
+            settings_bundle = settings_bundle_in_project(project)
             if settings_bundle == nil
               Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
             else
