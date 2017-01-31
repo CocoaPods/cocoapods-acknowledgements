@@ -4,7 +4,8 @@
 
 ##### Enhancements
 
-* None.  
+* Update matching for `Settings.bundle` file in project.  
+  [Jim Hildensperger](https://github.com/jhildensperger)
 
 ##### Bug Fixes
 
