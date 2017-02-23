@@ -33,7 +33,7 @@ plugin 'cocoapods-acknowledgements', :settings_bundle => true , :settings_post_p
 }
 ```
 
-The plugin will search through the first two levels of your project to find a `Settings.bundle` file, and add the file to the bundle. If this is not enough for you, we'd love a PR.
+The plugin will search through your project files to find a `Settings.bundle` file, and add the file to the bundle. If this is not enough for you, we'd love a PR.
 
 You can also exclude some dependencies so they won't be added to the generated plists. This is useful when you don't want to add private dependencies.
 
