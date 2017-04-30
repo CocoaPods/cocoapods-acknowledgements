@@ -22,11 +22,11 @@ module CocoaPodsAcknowledgements
       file_ref = cocoapods_group.new_file(plist_path)
     end
 
-    # Ensure that the plist is added to target
-    target = project.objects_by_uuid[user_target_uuid]
-    unless target.resources_build_phase.files_references.include?(file_ref)
-      target.add_resources([file_ref])
-    end
+    # # Ensure that the plist is added to target
+    # target = project.objects_by_uuid[user_target_uuid]
+    # unless target.resources_build_phase.files_references.include?(file_ref)
+    #   target.add_resources([file_ref])
+    # end
 
     project.save
 
