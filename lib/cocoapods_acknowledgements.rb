@@ -28,15 +28,15 @@ module CocoaPodsAcknowledgements
       unless target.resources_build_phase.files_references.include?(file_ref)
         target.add_resources([file_ref])
       end
-    end    
+    end  
 
     project.save
 
   end
 
-  def self.settings_bundle_in_project(project)
-    file = project.files.find { |f| f.path =~ /Settings\.bundle$/ }
-    file.hierarchy_path.sub('/', '') unless file.nil?
+  # TODO: Code golf this
+  def self.settings_bundle_in_project
+    Dir.glob("**/*Settings.bundle").first
   end
 
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
@@ -54,7 +54,7 @@ module CocoaPodsAcknowledgements
     Pod::UI.section 'Adding Acknowledgements' do
 
       should_include_settings = user_options["settings_bundle"] != nil
-      should_add_to_target = user_options["add_to_target"] != nil
+      should_add_to_target = (user_options["add_to_target"] != nil) ? user_options["add_to_target"] : true
       excluded_pods = Set.new(user_options["exclude"])
 
       sandbox = context.sandbox if defined? context.sandbox
@@ -80,13 +80,15 @@ module CocoaPodsAcknowledgements
             # We need to look for a Settings.bundle
             # and add this to the root of the bundle
 
-            settings_bundle = settings_bundle_in_project(project)
+            # settings_bundle = settings_bundle_in_project(project)
+            settings_bundle = settings_bundle_in_project
+            Pod::UI.info "settings_bundle = #{settings_bundle}"
             if settings_bundle == nil
               Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
             else
               settings_plist_path = settings_bundle + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
-              save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid,should_add_to_target)
-              Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
+              save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid, should_add_to_target)
+              Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label} with should_add_to_target = #{should_add_to_target}"
 
               # Support a callback for the key :settings_post_process
               if user_options["settings_post_process"]
