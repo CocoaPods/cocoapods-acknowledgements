@@ -8,10 +8,11 @@ module CocoaPodsAcknowledgements
         @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
       end
 
-      def generate(target_description, sandbox, excluded)
+      def generate(target_description, sandbox, excluded, excluded_targets)
         root_specs = target_description.specs.map(&:root).uniq.reject { |spec| excluded.include?(spec.name) }
 
         return nil if root_specs.empty?
+        return nil if excluded_targets.include? target_description
 
         specs_metadata = []
         root_specs.each do |spec|
