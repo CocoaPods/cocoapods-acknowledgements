@@ -34,7 +34,7 @@ module CocoaPodsAcknowledgements
 
   def self.settings_bundle_in_project(project)
     file = project.files.find { |f| f.path =~ /Settings\.bundle$/ }
-    file.hierarchy_path.sub('/', '') unless file.nil?
+    file.real_path.to_path unless file.nil?
   end
 
   Pod::HooksManager.register('cocoapods-acknowledgements', :post_install) do |context, user_options|
