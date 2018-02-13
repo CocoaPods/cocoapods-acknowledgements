@@ -1,14 +1,10 @@
-require 'cocoapods_acknowledgements/plist_generator'
+require 'cocoapods_acknowledgements/markdown_parser'
+require 'cocoapods_acknowledgements/generator'
 
 module CocoaPodsAcknowledgements
-  class SettingsPlistGenerator < PlistGenerator
+  class SettingsPlistGenerator < Generator
     class << self
-
-      def generate(target_description, sandbox, excluded)
-        root_specs = target_description.specs.map(&:root).uniq.reject { |spec| excluded.include?(spec.name) }
-
-        return nil if root_specs.empty?
-
+      def generate_specs(target_description, sandbox, excluded, root_specs)
         specs_metadata = [header]
 
         root_specs.each do |spec|
