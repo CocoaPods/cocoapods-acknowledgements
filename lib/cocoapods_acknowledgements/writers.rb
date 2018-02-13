@@ -36,7 +36,112 @@ module CocoaPodsAcknowledgements
   end
 
   class HTMLWriter < Writer
-    require 'nokogiri'
+    class HTMLObject
+      attr_accessor :tag
+      attr_accessor :children
+
+      def tag_begin
+        "<#{tag}>"
+      end
+
+      def tag_end
+        "</#{tag}>"
+      end
+
+      def to_html
+        [tag_begin, (children || []).map {|child| child.to_html}, tag_end].join("\n")
+      end
+
+      def << (object)
+        @children ||= []
+        @children << object
+      end
+
+      class << self
+        def tag(tag)
+          item = new
+          item.tag = tag
+          item
+        end
+      end
+    end
+
+    class PureHTMLObject < HTMLObject
+      attr_accessor :content
+
+      def tag_begin
+        ""
+      end
+
+      def tag_end
+        ""
+      end
+
+      def to_html
+        content
+      end
+
+      class << self
+        def content(html)
+          new_object = new
+          new_object.content = html
+          new_object
+        end
+      end
+    end
+
+    class HTMLObjectBuilder
+      attr_accessor :root_object
+      attr_accessor :current_object
+      attr_accessor :parent_object
+
+      def initialize(&block)
+        @root_object = nil
+        @current_object = nil
+        if block
+          block.call(self)
+        end
+      end
+
+      def tag(tag, &block)
+        new_object = HTMLObject.tag(tag)
+
+        unless @root_object
+          @root_object = new_object
+          @current_object = @root_object
+          @parent_object = @root_object
+        else
+          @parent_object = @current_object
+          @current_object << new_object
+          @current_object = new_object
+        end
+
+        # puts "root_object: #{@root_object.tag_begin}"
+        # puts "current_object: #{@current_object.tag_begin}"
+        # puts "parent_object: #{@parent_object.tag_begin}"
+
+        if block
+          block.call(self)
+        end
+
+        @current_object = @parent_object
+      end
+
+      def << (html)
+        # append html as pure object
+        @current_object << PureHTMLObject.content(html)
+      end
+
+      def content(html)
+        self << html
+      end
+
+      def to_html
+        root_object.to_html
+      end
+    end
+
+    # require 'nokogiri'
     class << self
       def file_extension
         '.html'
@@ -55,14 +160,18 @@ module CocoaPodsAcknowledgements
         specs = metadata["specs"].map do |spec|
           PlistGenerator::SpecObject.new(spec)
         end
-        builder = Nokogiri::HTML::Builder.new do |doc|
-          doc.html {
-            doc.body {
-              doc.h1 {doc.text self.header}
+
+        builder = HTMLObjectBuilder.new do |doc|
+          doc.tag("html") {
+            doc.tag("body") {
+              doc.tag("h1") {
+                doc << self.header
+              }
               specs.each do |spec|
-                doc.h2 {doc.text spec.name}
-                doc.p
-                puts "license: #{spec.licenseText}"
+                doc.tag("h2") {
+                  doc << spec.name
+                }
+                doc.tag("p")
                 license_into_html = MarkdownParser.parse_markdown(spec.licenseText)
                 doc << license_into_html
               end
@@ -70,6 +179,7 @@ module CocoaPodsAcknowledgements
             }
           }
         end
+
         content = builder.to_html
         File.open(filepath, 'w') do |file|
           file.write(content)
