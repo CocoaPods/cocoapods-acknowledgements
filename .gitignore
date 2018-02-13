@@ -16,6 +16,10 @@ test/tmp
 test/version_tmp
 tmp
 
+# RVM
+.ruby-gemset
+.ruby-version
+
 # JetBrains
 .idea/
 
