@@ -7,6 +7,9 @@
 * Update matching for `Settings.bundle` file in project.  
   [Jim Hildensperger](https://github.com/jhildensperger)
 
+* Add HTML acknowledgements file.
+  [Dmitry Lobanov](https://github.com/lolgear)
+
 ##### Bug Fixes
 
 * None.  
