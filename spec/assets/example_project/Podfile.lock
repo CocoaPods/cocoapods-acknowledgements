@@ -25,10 +25,15 @@ DEPENDENCIES:
   - AFNetworking
   - CocoaLumberjack
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - CocoaLumberjack
+
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: e033a5d8513357af2dd456eb66e202c325c30627
 
 PODFILE CHECKSUM: 88f3d4dd035661a9924a660d6973326ce997ad56
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3
