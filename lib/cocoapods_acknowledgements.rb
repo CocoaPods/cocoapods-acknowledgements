@@ -1,5 +1,6 @@
 module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/plist_generator'
+  require 'cocoapods_acknowledgements/html_generator'
   require 'cocoapods_acknowledgements/settings_plist_generator'
   require 'cocoapods_acknowledgements/writers'
   def self.write_metadata(metadata, file_path)
@@ -71,17 +72,17 @@ module CocoaPodsAcknowledgements
         umbrella_target.user_target_uuids.each do |user_target_uuid|
 
           # Generate a plist representing all of the podspecs
-          metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
-
-          next unless metadata
+          plist_metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
+          html_metadata = HTMLGenerator.generate(umbrella_target, sandbox, excluded_pods)
+          next unless plist_metadata
 
           # save plist file.
           plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
-          save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+          save_metadata(plist_metadata, plist_path, project, sandbox, user_target_uuid)
 
           # save html file.
           html_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.html"
-          save_metadata(metadata, html_path, project, sandbox, user_target_uuid)
+          save_metadata(html_metadata, html_path, project, sandbox, user_target_uuid)
 
           if should_include_settings
             # Generate a plist in Settings format
