@@ -9,7 +9,9 @@ module CocoaPodsAcknowledgements
       when '.plist'
         PlistWriter.write(metadata, file_path)
       when '.html'
-        HTMLWriter.write(metadata, file_path)
+        HTMLWriter::ERBWriter.write(metadata, file_path)
+      when '.md'
+        MarkdownWriter::ERBWriter.write(metadata, file_path)
     end
   end
 
@@ -83,6 +85,10 @@ module CocoaPodsAcknowledgements
           # save html file.
           html_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.html"
           save_metadata(html_metadata, html_path, project, sandbox, user_target_uuid)
+
+          # save markdown file.
+          markdown_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.md"
+          save_metadata(html_metadata, markdown_path, project, sandbox, user_target_uuid)
 
           if should_include_settings
             # Generate a plist in Settings format

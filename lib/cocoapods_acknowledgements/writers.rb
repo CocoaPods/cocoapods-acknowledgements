@@ -164,9 +164,6 @@ module CocoaPodsAcknowledgements
       def <= (html)
         self << html
         !self
-        # self.content(html)
-        # self.close
-        # self
       end
     end
 
@@ -189,10 +186,75 @@ module CocoaPodsAcknowledgements
             doc >= "p"
             doc << MarkdownParser.parse_markdown(spec.licenseText)
           end
-          doc <= footer
+          doc << footer
         end
 
         content = builder.to_html
+        File.open(filepath, 'w') do |file|
+          file.write(content)
+        end
+      end
+    end
+    class ERBWriter < HTMLWriter
+      require 'erb'
+      def self.write_to_file(metadata, filepath)
+        specs = metadata["specs"]
+        header = metadata["header"]
+        footer = metadata["footer"]
+        binded = binding
+        binded.local_variable_set(:specs, specs)
+        binded.local_variable_set(:header, header)
+        binded.local_variable_set(:footer, footer)
+        template = ERB.new %q{
+          <html>
+            <body>
+              <h1><%= header %></h1>
+              <% specs.each do |spec| %>
+              <h2><%= spec.name %></h2>
+              <p></p>
+              <%= MarkdownParser.parse_markdown(spec.licenseText) %>
+              <% end %>
+              <%= footer %>
+            </body>
+          </html>
+        }
+        content = template.result(binded)
+        File.open(filepath, 'w') do |file|
+          file.write(content)
+        end
+      end
+    end
+  end
+  class MarkdownWriter < Writer
+    class << self
+      def file_extension
+        '.md'
+      end
+      def write_to_file(metadata, filepath)
+      end
+    end
+    class ERBWriter < MarkdownWriter
+      require 'erb'
+      def self.write_to_file(metadata, filepath)
+        specs = metadata["specs"]
+        header = metadata["header"]
+        footer = metadata["footer"]
+        binded = binding
+        binded.local_variable_set(:specs, specs)
+        binded.local_variable_set(:header, header)
+        binded.local_variable_set(:footer, footer)
+        template = ERB.new %q{
+# <%= header %> #
+
+<% specs.each do |spec| %>
+## <%= spec.name %> ##
+
+<%= spec.licenseText %>
+<% end %>
+
+<%= footer %>
+        }
+        content = template.result(binded)
         File.open(filepath, 'w') do |file|
           file.write(content)
         end
