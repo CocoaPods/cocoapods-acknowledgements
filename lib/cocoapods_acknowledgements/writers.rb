@@ -198,13 +198,10 @@ module CocoaPodsAcknowledgements
     class ERBWriter < HTMLWriter
       require 'erb'
       def self.write_to_file(metadata, filepath)
-        specs = metadata["specs"]
-        header = metadata["header"]
-        footer = metadata["footer"]
-        binded = binding
-        binded.local_variable_set(:specs, specs)
-        binded.local_variable_set(:header, header)
-        binded.local_variable_set(:footer, footer)
+        binded = ["specs", "header", "footer"].reduce(binding) do |total, key|
+          total.local_variable_set(key.to_sym, metadata[key])
+          total
+        end
         template = ERB.new %q{
           <html>
             <body>
@@ -236,13 +233,10 @@ module CocoaPodsAcknowledgements
     class ERBWriter < MarkdownWriter
       require 'erb'
       def self.write_to_file(metadata, filepath)
-        specs = metadata["specs"]
-        header = metadata["header"]
-        footer = metadata["footer"]
-        binded = binding
-        binded.local_variable_set(:specs, specs)
-        binded.local_variable_set(:header, header)
-        binded.local_variable_set(:footer, footer)
+        binded = ["specs", "header", "footer"].reduce(binding) do |total, key|
+          total.local_variable_set(key.to_sym, metadata[key])
+          total
+        end
         template = ERB.new %q{
 # <%= header %> #
 
