@@ -6,6 +6,10 @@ module CocoaPodsAcknowledgements
     class << self
       def generate_specs(target_description, sandbox, excluded, root_specs)
         metadata = super
+        specs = metadata["specs"]
+        metadata["specs"] = specs.map do |spec|
+          Generator::SpecObject.new(spec)
+        end
         metadata["header"] = header
         metadata["footer"] = footer
         metadata

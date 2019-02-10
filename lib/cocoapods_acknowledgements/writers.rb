@@ -103,9 +103,16 @@ module CocoaPodsAcknowledgements
         end
       end
 
-      def tag(tag, &block)
-        new_object = HTMLObject.tag(tag)
+      def tag_or_object(tag)
+        if tag.is_a? HTMLObject
+          tag
+        else
+          HTMLObject.tag tag
+        end
+      end
 
+      def open(tag)
+        new_object = tag_or_object tag
         unless @root_object
           @root_object = new_object
           @current_object = @root_object
@@ -115,29 +122,51 @@ module CocoaPodsAcknowledgements
           @current_object << new_object
           @current_object = new_object
         end
+      end
 
-        # puts "root_object: #{@root_object.tag_begin}"
-        # puts "current_object: #{@current_object.tag_begin}"
-        # puts "parent_object: #{@parent_object.tag_begin}"
-
-        if block
-          block.call(self)
-        end
-
+      def close
         @current_object = @parent_object
       end
 
-      def << (html)
-        # append html as pure object
-        @current_object << PureHTMLObject.content(html)
+      def tag(tag, &block)
+        self.open tag
+        if block
+          block.call(self)
+        end
+        self.close
       end
 
       def content(html)
-        self << html
+        @current_object << PureHTMLObject.content(html)
       end
 
       def to_html
         root_object.to_html
+      end
+
+      # MARK: DSL
+      def > (tag)
+        self.open tag
+        self
+      end
+      def !
+        self.close
+        self
+      end
+      def << (html)
+        self.content(html)
+        self
+      end
+      def >= (tag)
+        self > tag
+        !self
+      end
+      def <= (html)
+        self << html
+        !self
+        # self.content(html)
+        # self.close
+        # self
       end
     end
 
@@ -148,29 +177,19 @@ module CocoaPodsAcknowledgements
 
       def write_to_file(metadata, filepath)
         # for each component of metadata we should wrap it into appropriate component.
-        specs = metadata["specs"].map do |spec|
-          Generator::SpecObject.new(spec)
-        end
+        specs = metadata["specs"]
         header = metadata["header"]
         footer = metadata["footer"]
 
         builder = HTMLObjectBuilder.new do |doc|
-          doc.tag("html") {
-            doc.tag("body") {
-              doc.tag("h1") {
-                doc << header
-              }
-              specs.each do |spec|
-                doc.tag("h2") {
-                  doc << spec.name
-                }
-                doc.tag("p")
-                license_into_html = MarkdownParser.parse_markdown(spec.licenseText)
-                doc << license_into_html
-              end
-              doc << footer
-            }
-          }
+          doc > "html" > "body"
+          doc > "h1" <= header
+          specs.each do |spec|
+            doc > "h2" <= spec.name
+            doc >= "p"
+            doc << MarkdownParser.parse_markdown(spec.licenseText)
+          end
+          doc <= footer
         end
 
         content = builder.to_html
