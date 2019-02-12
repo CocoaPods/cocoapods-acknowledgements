@@ -3,16 +3,8 @@ module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/html_generator'
   require 'cocoapods_acknowledgements/settings_plist_generator'
   require 'cocoapods_acknowledgements/writers'
-  def self.write_metadata(metadata, file_path)
-    extname = Pathname.new(file_path).extname
-    case extname
-      when '.plist'
-        PlistWriter.write(metadata, file_path)
-      when '.html'
-        HTMLWriter.write(metadata, file_path)
-      when '.md'
-        MarkdownWriter.write(metadata, file_path)
-    end
+  def self.write_metadata(metadata, filepath)
+    Writers.write(metadata, filepath)
   end
 
   def self.add_metadata_to_project(plist_path, project, sandbox, user_target_uuid)
