@@ -9,9 +9,9 @@ module CocoaPodsAcknowledgements
       when '.plist'
         PlistWriter.write(metadata, file_path)
       when '.html'
-        HTMLWriter::ERBWriter.write(metadata, file_path)
+        HTMLWriter.write(metadata, file_path)
       when '.md'
-        MarkdownWriter::ERBWriter.write(metadata, file_path)
+        MarkdownWriter.write(metadata, file_path)
     end
   end
 

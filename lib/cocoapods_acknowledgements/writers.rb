@@ -49,11 +49,14 @@ module CocoaPodsAcknowledgements
       end
 
       def to_html
-        [tag_begin, (children || []).map {|child| child.to_html}, tag_end].join("\n")
+        [tag_begin, children.map(&:to_html), tag_end].join("\n")
+      end
+
+      def initialize
+        @children = []
       end
 
       def << (object)
-        @children ||= []
         @children << object
       end
 
@@ -90,6 +93,20 @@ module CocoaPodsAcknowledgements
       end
     end
 
+    class MarkdownObject < HTMLObject
+      def tag_begin
+        tag
+      end
+      def tag_end
+        tag
+      end
+      def to_html
+          ([
+            [tag_begin, children.first.to_html, tag_end].join(" ")
+          ] + children.drop(1).map(&:to_html)).join("\n\n")
+      end
+    end
+
     class HTMLObjectBuilder
       attr_accessor :root_object
       attr_accessor :current_object
@@ -103,16 +120,21 @@ module CocoaPodsAcknowledgements
         end
       end
 
+      def base_object
+        HTMLObject
+      end
+
       def tag_or_object(tag)
-        if tag.is_a? HTMLObject
+        if tag.is_a? base_object
           tag
         else
-          HTMLObject.tag tag
+          base_object.tag tag
         end
       end
 
       def open(tag)
         new_object = tag_or_object tag
+
         unless @root_object
           @root_object = new_object
           @current_object = @root_object
@@ -167,6 +189,20 @@ module CocoaPodsAcknowledgements
       end
     end
 
+    class MarkdownObjectBuilder < HTMLObjectBuilder
+      def base_object
+        MarkdownObject
+      end
+      def to_markdown
+        to_html
+      end
+      def open(tag)
+        Pod::UI.info tag
+        Pod::UI.info (tag_or_object(tag).tag)
+        super
+      end
+    end
+
     class << self
       def file_extension
         '.html'
@@ -195,6 +231,7 @@ module CocoaPodsAcknowledgements
         end
       end
     end
+
     class ERBWriter < HTMLWriter
       require 'erb'
       def self.write_to_file(metadata, filepath)
@@ -228,6 +265,22 @@ module CocoaPodsAcknowledgements
         '.md'
       end
       def write_to_file(metadata, filepath)
+        specs = metadata["specs"]
+        header = metadata["header"]
+        footer = metadata["footer"]
+        builder = HTMLWriter::MarkdownObjectBuilder.new do |doc|
+          doc > "#" <= header
+          specs.each do |spec|
+            doc > "##" <= spec.name
+            doc << spec.licenseText
+          end
+          doc << footer
+        end
+        Pod::UI.info builder.root_object.inspect
+        content = builder.to_markdown
+        File.open(filepath, 'w') do |file|
+          file.write(content)
+        end
       end
     end
     class ERBWriter < MarkdownWriter
