@@ -67,7 +67,7 @@ module CocoaPodsAcknowledgements
         specs.each do |spec|
           doc > "h2" <= spec.name
           doc >= "p"
-          doc << MarkdownParser.parse_markdown(spec.licenseText)
+          doc << spec.licenseText
         end
         doc << footer
       end
@@ -92,7 +92,7 @@ module CocoaPodsAcknowledgements
               <% specs.each do |spec| %>
               <h2><%= spec.name %></h2>
               <p></p>
-              <%= MarkdownParser.parse_markdown(spec.licenseText) %>
+              <%= spec.licenseText %>
               <% end %>
               <%= footer %>
             </body>
