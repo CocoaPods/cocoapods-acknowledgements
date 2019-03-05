@@ -66,21 +66,19 @@ module CocoaPodsAcknowledgements
         umbrella_target.user_target_uuids.each do |user_target_uuid|
 
           # Generate a plist representing all of the podspecs
-          plist_metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
-          html_metadata = HTMLGenerator.generate(umbrella_target, sandbox, excluded_pods)
-          next unless plist_metadata
+          metadata_and_filepath =
+          [PlistGenerator, HTMLGenerator, MarkdownGenerator].zip([".plist", ".html", ".md"]).map do |pair|
+            generator, extension = pair
+            filepath = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata#{extension}"
+            [generator.generate(umbrella_target, sandbox, excluded_pods), filepath]
+          end
 
-          # save plist file.
-          plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
-          save_metadata(plist_metadata, plist_path, project, sandbox, user_target_uuid)
+          next if metadata_and_filepath.empty?
 
-          # save html file.
-          html_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.html"
-          save_metadata(html_metadata, html_path, project, sandbox, user_target_uuid)
-
-          # save markdown file.
-          markdown_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.md"
-          save_metadata(html_metadata, markdown_path, project, sandbox, user_target_uuid)
+          metadata_and_filepath.each do |pair|
+            metadata, filepath = pair
+            save_metadata(metadata, filepath, project, sandbox, user_target_uuid)
+          end
 
           if should_include_settings
             # Generate a plist in Settings format
