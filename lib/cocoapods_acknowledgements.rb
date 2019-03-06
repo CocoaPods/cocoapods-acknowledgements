@@ -67,10 +67,13 @@ module CocoaPodsAcknowledgements
 
           # Generate a plist representing all of the podspecs
           metadata_and_filepath =
-          [PlistGenerator, HTMLGenerator, MarkdownGenerator].zip([".plist", ".html", ".md"]).map do |pair|
-            generator, extension = pair
+          [PlistGenerator, HTMLGenerator, MarkdownGenerator].zip([PlistWriter, HTMLWriter, MarkdownWriter]).map do |pair|
+            generator, writer = pair
+            extension = writer.file_extension
             filepath = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata#{extension}"
             [generator.generate(umbrella_target, sandbox, excluded_pods), filepath]
+          end.reject do |pair|
+            pair.first.nil?
           end
 
           next if metadata_and_filepath.empty?
