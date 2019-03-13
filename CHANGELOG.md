@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.3 (2018-04-04)
+
+##### Enhancements
+
 * Update matching for `Settings.bundle` file in project.  
   [Jim Hildensperger](https://github.com/jhildensperger)
 
