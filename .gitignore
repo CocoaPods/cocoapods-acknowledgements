@@ -1,3 +1,7 @@
+# macOS
+.DS_Store
+
+# Ruby
 *.gem
 *.rbc
 .bundle
@@ -15,3 +19,16 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# RVM
+.ruby-gemset
+.ruby-version
+
+# JetBrains
+.idea/
+
+# Xcode
+xcuserdata/
+
+# Pods
+Pods/

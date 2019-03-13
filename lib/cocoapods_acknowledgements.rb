@@ -1,14 +1,13 @@
 module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/plist_generator'
+  require 'cocoapods_acknowledgements/html_generator'
   require 'cocoapods_acknowledgements/settings_plist_generator'
+  require 'cocoapods_acknowledgements/writers'
+  def self.write_metadata(metadata, filepath)
+    Writers.write(metadata, filepath)
+  end
 
-  def self.save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
-    if defined? Xcodeproj::Plist.write_to_path
-      Xcodeproj::Plist.write_to_path(metadata, plist_path)
-    else
-      Xcodeproj.write_plist(metadata, plist_path)
-    end
-
+  def self.add_metadata_to_project(plist_path, project, sandbox, user_target_uuid)
     # Find a root folder in the users Xcode Project called Pods, or make one
     cocoapods_group = project.main_group["Pods"]
     unless cocoapods_group
@@ -17,7 +16,7 @@ module CocoaPodsAcknowledgements
 
     # Add the example plist to the found CocoaPods group
     plist_pathname = Pathname.new(File.expand_path(plist_path))
-    file_ref = cocoapods_group.files.find { |file| file.real_path == plist_pathname }
+    file_ref = cocoapods_group.files.find {|file| file.real_path == plist_pathname}
     unless file_ref
       file_ref = cocoapods_group.new_file(plist_path)
     end
@@ -29,11 +28,15 @@ module CocoaPodsAcknowledgements
     end
 
     project.save
+  end
 
+  def self.save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+    write_metadata(metadata, plist_path)
+    add_metadata_to_project(plist_path, project, sandbox, user_target_uuid)
   end
 
   def self.settings_bundle_in_project(project)
-    file = project.files.find { |f| f.path =~ /Settings\.bundle$/ }
+    file = project.files.find {|f| f.path =~ /Settings\.bundle$/}
     file.real_path.to_path unless file.nil?
   end
 
@@ -63,12 +66,22 @@ module CocoaPodsAcknowledgements
         umbrella_target.user_target_uuids.each do |user_target_uuid|
 
           # Generate a plist representing all of the podspecs
-          metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
+          metadata_and_filepath =
+          [PlistGenerator, HTMLGenerator, MarkdownGenerator].zip([PlistWriter, HTMLWriter, MarkdownWriter]).map do |pair|
+            generator, writer = pair
+            extension = writer.file_extension
+            filepath = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata#{extension}"
+            [generator.generate(umbrella_target, sandbox, excluded_pods), filepath]
+          end.reject do |pair|
+            pair.first.nil?
+          end
 
-          next unless metadata
+          next if metadata_and_filepath.empty?
 
-          plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
-          save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+          metadata_and_filepath.each do |pair|
+            metadata, filepath = pair
+            save_metadata(metadata, filepath, project, sandbox, user_target_uuid)
+          end
 
           if should_include_settings
             # Generate a plist in Settings format
