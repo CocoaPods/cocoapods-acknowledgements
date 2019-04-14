@@ -3,52 +3,8 @@ require File.expand_path('../spec_helper.rb', __FILE__)
 describe SettingsPlistGenerator = CocoaPodsAcknowledgements::SettingsPlistGenerator do
 
   before do
-    @spec1 = Pod::Specification.new do |s|
-      s.name = 'monkeylib'
-      s.version = '1.0'
-      s.authors = {
-        'CocoaPods' => 'email@cocoapods.org'
-      }
-      s.social_media_url = 'https://twitter.com/CocoaPods'
-      s.homepage = 'https://github.com/CocoaPods/monkeylib'
-      s.license = {
-        :type => 'MIT',
-        :file => 'LICENSE',
-        :text => 'Permission is hereby granted ...'
-      }
-      s.summary = 'A lib to do monkey things'
-      s.description = <<EOF
-## What is it
-A lib to do monkey things
-## Why?
-Why not?
-EOF
-    end
-    @spec2 = Pod::Specification.new do |s|
-      s.name         = 'BananaLib'
-      s.version      = '1.0'
-      s.authors      = 'Banana Corp', { 'Monkey Boy' => 'monkey@banana-corp.local' }
-      s.homepage     = 'http://banana-corp.local/banana-lib.html'
-      s.summary      = 'Chunky bananas!'
-      s.description  = 'Full of chunky bananas.'
-      s.source       = { :git => 'http://banana-corp.local/banana-lib.git', :tag => 'v1.0' }
-      s.license      = {
-        :type => 'MIT',
-        :file => 'LICENSE',
-        :text => 'Permission is hereby granted ...'
-      }
-      s.source_files        = 'Classes/*.{h,m,d}', 'Vendor', 'framework/Source/*.h'
-      s.resources           = "Resources/*", "Resources/Images.xcassets"
-      s.vendored_framework  = 'BananaFramework.framework'
-      s.vendored_library    = 'libBananaStaticLib.a'
-      s.preserve_paths      = 'preserve_me.txt'
-      s.public_header_files = 'Classes/Banana.h', 'framework/Source/MoreBanana.h'
-      s.module_map          = 'Banana.modulemap'
-
-      s.prefix_header_file = 'Classes/BananaLib.pch'
-      s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
-      s.dependency   'monkey', '~> 1.0.1', '< 1.0.9'
-    end
+    @spec1 = SpecHelper.spec1
+    @spec2 = SpecHelper.spec2
     SettingsPlistGenerator.stubs(:file_accessor).returns(nil)
     @sandbox = temporary_sandbox
     @target_description = stub('target_description',
