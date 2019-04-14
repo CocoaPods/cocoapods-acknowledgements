@@ -44,4 +44,14 @@ module Pod
   end
 end
 
+module SpecHelper
+  def self.temporary_directory
+    ROOT + 'tmp'
+  end
+end
+
+def temporary_sandbox
+  Pod::Sandbox.new(SpecHelper.temporary_directory + 'Pods')
+end
+
 #-----------------------------------------------------------------------------#
