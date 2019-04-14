@@ -4,7 +4,13 @@
 
 ##### Enhancements
 
-* None.  
+* Improve the performance of metadata generation  
+ [Eric Amorde](https://github.com/amorde)
+ [#54](https://github.com/CocoaPods/cocoapods-acknowledgements/pull/54)
+
+* Add tests  
+ [Eric Amorde](https://github.com/amorde)
+ [#1](https://github.com/CocoaPods/cocoapods-acknowledgements/issues/1)
 
 ##### Bug Fixes
 
