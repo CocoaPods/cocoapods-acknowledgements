@@ -60,44 +60,38 @@ module CocoaPodsAcknowledgements
       context.umbrella_targets.each do |umbrella_target|
         project = Xcodeproj::Project.open(umbrella_target.user_project_path)
 
-        umbrella_target.user_target_uuids.each do |user_target_uuid|
+        # Generate a plist representing all of the podspecs
+        metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
+        next unless metadata
 
-          # Generate a plist representing all of the podspecs
-          metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
-
-          next unless metadata
-
-          plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
-          save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
-
-          if should_include_settings
+        if should_include_settings
+          # We need to look for a Settings.bundle
+          # and add this to the root of the bundle
+          settings_bundle = settings_bundle_in_project(project)
+          if settings_bundle == nil
+            Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
+          else
             # Generate a plist in Settings format
             settings_metadata = SettingsPlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
-
-            # We need to look for a Settings.bundle
-            # and add this to the root of the bundle
-
-            settings_bundle = settings_bundle_in_project(project)
-            if settings_bundle == nil
-              Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
-            else
-              settings_plist_path = settings_bundle + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
-              save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid)
-              Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
-
-              # Support a callback for the key :settings_post_process
-              if user_options["settings_post_process"]
-                user_options["settings_post_process"].call(settings_plist_path, umbrella_target, excluded_pods)
-              end
-
-            end
+            settings_plist_path = settings_bundle + "/#{umbrella_target.cocoapods_target_label}-settings-metadata.plist"
           end
-
         end
 
+        plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
+        
+        umbrella_target.user_target_uuids.each do |user_target_uuid|
+          save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+
+          if settings_metadata && settings_plist_path
+            save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid)
+            Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
+            # Support a callback for the key :settings_post_process
+            if user_options["settings_post_process"]
+              user_options["settings_post_process"].call(settings_plist_path, umbrella_target, excluded_pods)
+            end
+          end
+        end
       end
-
     end
-
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'redcarpet'
 
 module CocoaPodsAcknowledgements
@@ -13,14 +14,12 @@ module CocoaPodsAcknowledgements
 
         return nil if root_specs.empty?
 
-        specs_metadata = []
-        root_specs.each do |spec|
-          pod_root = sandbox.pod_dir(spec.name)
+        specs_metadata = root_specs.map do |spec|
           platform = Pod::Platform.new(target_description.platform_name)
           file_accessor = file_accessor(spec, platform, sandbox)
           license_text = license_text(spec, file_accessor)
 
-          spec_metadata = {
+          {
             "name" => spec.name,
             "version" => spec.version,
             "authors" => spec.authors,
@@ -31,12 +30,11 @@ module CocoaPodsAcknowledgements
             "licenseText" => license_text,
             "homepage" => spec.homepage,
           }
-          specs_metadata << spec_metadata
         end
 
-        metadata = {}
-        metadata["specs"] = specs_metadata
-        metadata
+        {
+          "specs" => specs_metadata
+        }
       end
 
       #-----------------------------------------------------------------------#
