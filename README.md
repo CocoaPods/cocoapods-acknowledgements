@@ -35,12 +35,18 @@ plugin 'cocoapods-acknowledgements', :settings_bundle => true , :settings_post_p
 
 The plugin will search through your project files to find a `Settings.bundle` file, and add the file to the bundle. If this is not enough for you, we'd love a PR.
 
-You can also exclude some dependencies so they won't be added to the generated plists. This is useful when you don't want to add private dependencies.
+You can exclude some dependencies so they won't be added to the generated plists. This is useful when you don't want to add private dependencies.
 
 ```ruby
 plugin 'cocoapods-acknowledgements', :settings_bundle => true, :exclude => 'PrivateKit'
 
 plugin 'cocoapods-acknowledgements', :settings_bundle => true, :exclude => ['PrivateKit', 'SecretLib']
+```
+
+You can also specify a list of targets for which to generate acknowledgements. This can be useful to exclude test or extension targets.
+
+``` ruby
+plugin 'cocoapods-acknowledgements', :targets => ['MyApp']
 ```
 
 ### Location
