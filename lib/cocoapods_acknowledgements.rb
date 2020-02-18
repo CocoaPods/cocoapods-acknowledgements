@@ -29,7 +29,6 @@ module CocoaPodsAcknowledgements
     end
 
     project.save
-
   end
 
   def self.settings_bundle_in_project(project)
@@ -53,6 +52,7 @@ module CocoaPodsAcknowledgements
 
       should_include_settings = user_options["settings_bundle"]
       excluded_pods = Set.new(user_options["exclude"])
+      targets = Set.new(user_options["targets"])
 
       sandbox = context.sandbox if defined? context.sandbox
       sandbox ||= Pod::Sandbox.new(context.sandbox_root)
@@ -78,8 +78,16 @@ module CocoaPodsAcknowledgements
         end
 
         plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
-        
-        umbrella_target.user_target_uuids.each do |user_target_uuid|
+
+        user_target_uuids = if targets.empty?
+          umbrella_target.user_target_uuids
+        else
+          umbrella_target.user_targets.select do |target|
+            targets.include?(target.name)
+          end.map(&:uuid)
+        end
+
+        user_target_uuids.each do |user_target_uuid|
           save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
 
           if settings_metadata && settings_plist_path

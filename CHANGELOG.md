@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add `targets` options to specify targets to add metadata  
+ [Richard Lee](https://github.com/dlackty)
+ [#46](https://github.com/CocoaPods/cocoapods-acknowledgements/issues/46)
+
 * Improve the performance of metadata generation  
  [Eric Amorde](https://github.com/amorde)
  [#54](https://github.com/CocoaPods/cocoapods-acknowledgements/pull/54)

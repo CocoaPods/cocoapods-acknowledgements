@@ -143,5 +143,13 @@ describe CocoaPodsAcknowledgements do
       Pod::HooksManager.run(:post_install, @hook_context, { 'cocoapods-acknowledgements' => { :settings_bundle => true }})
       FileUtils.rm_rf(settings_bundle)
     end
+
+    it "generates acknowledgement plists to only specified targets" do
+      CocoaPodsAcknowledgements.expects(:save_metadata).with(@plist_content, @plist_path, @project, @sandbox, @target.uuid).once
+      Pod::HooksManager.run(:post_install, @hook_context, { 'cocoapods-acknowledgements' => { targets: ['MyApp'] }})
+
+      CocoaPodsAcknowledgements.expects(:save_metadata).never
+      Pod::HooksManager.run(:post_install, @hook_context, { 'cocoapods-acknowledgements' => { targets: ['TheOtherTarget'] }})
+    end
   end
 end
