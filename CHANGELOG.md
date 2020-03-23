@@ -1,8 +1,12 @@
 # CocoaPods Acknowledgements Changelog
 
-## Master
+## 1.2.0 (2020-03-23)
 
 ##### Enhancements
+
+* Update internal gem dependencies to latest versions 
+ [Olivier Halligon](https://github.com/AliSoftware)
+ [#56](https://github.com/CocoaPods/cocoapods-acknowledgements/pull/56)
 
 * Add `targets` options to specify targets to add metadata  
  [Richard Lee](https://github.com/dlackty)
