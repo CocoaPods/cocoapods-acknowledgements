@@ -1,6 +1,6 @@
 # CocoaPods Acknowledgements Changelog
 
-## Master
+## 1.2.0 (2020-03-23)
 
 ##### Enhancements
 
