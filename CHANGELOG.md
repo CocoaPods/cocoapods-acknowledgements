@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Update to work with 1.10 release of cocoapods  
+ [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+ [#57](https://github.com/CocoaPods/cocoapods-acknowledgements/issues/57)
 
 ##### Bug Fixes
 

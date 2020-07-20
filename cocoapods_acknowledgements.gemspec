@@ -16,8 +16,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  # Version 5 needs Ruby 2.2, so we specify an upper bound to stay compatible with system ruby
-  spec.add_runtime_dependency 'activesupport', '>= 4.0.2', '< 5'
+  spec.add_runtime_dependency 'cocoapods'
 
   spec.add_dependency "redcarpet", "~> 3.3"
   spec.add_dependency "xcodeproj"
