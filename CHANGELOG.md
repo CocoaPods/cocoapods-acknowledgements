@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.3.0 (2020-10-21)
+
+##### Enhancements
+
 * Update to work with 1.10 release of cocoapods  
  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
  [#57](https://github.com/CocoaPods/cocoapods-acknowledgements/issues/57)
