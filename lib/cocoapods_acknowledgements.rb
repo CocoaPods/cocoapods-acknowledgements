@@ -2,13 +2,15 @@ module CocoaPodsAcknowledgements
   require 'cocoapods_acknowledgements/plist_generator'
   require 'cocoapods_acknowledgements/settings_plist_generator'
 
-  def self.save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+  def self.write_metadata(metadata, plist_path)
     if defined? Xcodeproj::Plist.write_to_path
       Xcodeproj::Plist.write_to_path(metadata, plist_path)
     else
       Xcodeproj.write_plist(metadata, plist_path)
     end
+  end
 
+  def self.add_to_target(metadata, plist_path, project, sandbox, user_target_uuid)
     # Find a root folder in the users Xcode Project called Pods, or make one
     cocoapods_group = project.main_group["Pods"]
     unless cocoapods_group
@@ -58,7 +60,7 @@ module CocoaPodsAcknowledgements
       sandbox ||= Pod::Sandbox.new(context.sandbox_root)
 
       context.umbrella_targets.each do |umbrella_target|
-        project = Xcodeproj::Project.open(umbrella_target.user_project_path)
+        project = Xcodeproj::Project.open(umbrella_target.user_project_path) if umbrella_target.user_project
 
         # Generate a plist representing all of the podspecs
         metadata = PlistGenerator.generate(umbrella_target, sandbox, excluded_pods)
@@ -67,7 +69,7 @@ module CocoaPodsAcknowledgements
         if should_include_settings
           # We need to look for a Settings.bundle
           # and add this to the root of the bundle
-          settings_bundle = settings_bundle_in_project(project)
+          settings_bundle = settings_bundle_in_project(project) unless project.nil?
           if settings_bundle == nil
             Pod::UI.warn "Could not find a Settings.bundle to add the Pod Settings Plist to."
           else
@@ -79,6 +81,12 @@ module CocoaPodsAcknowledgements
 
         plist_path = sandbox.root + "#{umbrella_target.cocoapods_target_label}-metadata.plist"
 
+        write_metadata(metadata, plist_path)
+        write_metadata(settings_metadata, settings_plist_path) if settings_metadata && settings_plist_path
+
+        # Skip target integration when we don't have a project
+        next unless project
+
         user_target_uuids = if targets.empty?
           umbrella_target.user_target_uuids
         else
@@ -88,10 +96,10 @@ module CocoaPodsAcknowledgements
         end
 
         user_target_uuids.each do |user_target_uuid|
-          save_metadata(metadata, plist_path, project, sandbox, user_target_uuid)
+          add_to_target(metadata, plist_path, project, sandbox, user_target_uuid)
 
           if settings_metadata && settings_plist_path
-            save_metadata(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid)
+            add_to_target(settings_metadata, settings_plist_path, project, sandbox, user_target_uuid)
             Pod::UI.info "Added Pod info to Settings.bundle for target #{umbrella_target.cocoapods_target_label}"
             # Support a callback for the key :settings_post_process
             if user_options["settings_post_process"]
